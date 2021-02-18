@@ -1,17 +1,23 @@
 #include "gamemode.h"
 
 void GameMode::MainMenu(){
-    cout << "\033[2J\033[1;1H";
-    cout << "/------------- Welcome to 2D Snake Game -------------/" << endl;
+    cout << "/-------Welcome to CppND-Capstone-Snake-Game ----------/" << endl;
     cout << "/--------------------- Main Menu --------------------/" << endl;
     cout << "1. Play Game" << endl;
-    cout << "2. Show Game History" << endl;
+    cout << "2. ScoreBoard" << endl;
 }
 
 void GameMode::GetPlayerName(){
-    cout << "\033[2J\033[1;1H";
-    cout << "/------------------ Game Settings -------------------/" << endl;
-    cout << "Please enter your name: ";
+    cout << "/------------------ How To Play -------------------/" << endl;
+    cout << "           Eat Yellow Egg To Get Points             " << endl;
+    cout << "         Eat Grean Egg to Slow Your Speed           " << endl;
+    cout << "Do Not Eat Red Egg It Will Increase Your Speed Twice" << endl;
+  
+  
+  
+  cout << endl << endl << endl;
+   cout << "/------------------ Insert Your Name -------------------/" << endl;
+   cout << "Please enter your name: ";
 }
 
 

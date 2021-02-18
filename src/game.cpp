@@ -11,6 +11,7 @@ Game::Game(size_t grid_width, size_t grid_height)
       random_h(0, static_cast<int>(grid_height)) {
   PlaceFood();
   PlacePowerSlow();
+  PlacePowerFast();
 }
 
 bool Game::FoodCell(int x, int y){
@@ -21,7 +22,16 @@ bool Game::FoodCell(int x, int y){
 }
 
 bool Game::PowerSlowCell(int x, int y){
-  if(x == power_slow.x && y == power_slow.y){
+  if(x == power_slow.x && y == power_slow.y)
+  {
+    return true;
+  }
+  return false;
+}
+
+bool Game::PowerFastCell(int x, int y){
+  if(x == power_Fast.x && y == power_Fast.y)
+  {
     return true;
   }
   return false;
@@ -42,7 +52,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
-    renderer.Render(snake, food, power_slow);
+    renderer.Render(snake, food, power_slow,power_Fast);
 
     frame_end = SDL_GetTicks();
 
@@ -74,7 +84,7 @@ void Game::PlaceFood() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y) && !Game::PowerSlowCell(x, y)) {
+    if (!snake.SnakeCell(x, y) && !Game::PowerSlowCell(x, y) && !Game::PowerFastCell(x, y)) {
       food.x = x;
       food.y = y;
       return;
@@ -89,9 +99,23 @@ void Game::PlacePowerSlow() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y) && !Game::FoodCell(x, y)) {
+    if (!snake.SnakeCell(x, y) && !Game::FoodCell(x, y) && !Game::PowerFastCell(x, y)) {
       power_slow.x = x;
       power_slow.y = y;
+      return;
+    }
+  }
+}
+void Game::PlacePowerFast() {
+  int x, y;
+  while (true) {
+    x = random_w(engine);
+    y = random_h(engine);
+    // Check that the location is not occupied by a snake item before placing
+    // food.
+    if (!snake.SnakeCell(x, y) && !Game::FoodCell(x, y) && !Game::PowerSlowCell(x, y)) {
+      power_Fast.x = x;
+      power_Fast.y = y;
       return;
     }
   }
@@ -111,13 +135,18 @@ void Game::Update() {
     PlaceFood();
     // Grow snake and increase speed.
     snake.GrowBody();
-    snake.speed += 0.02;
+    snake.speed += 0.01;
   }
 
   if (power_slow.x == new_x && power_slow.y == new_y) {
     //decreases speed
-    snake.speed += 0.02;
+    snake.speed -= 0.02;
     PlacePowerSlow();
+  }
+  if (power_Fast.x == new_x && power_Fast.y == new_y) {
+    //decreases speed
+    snake.speed += snake.speed;
+    PlacePowerFast();
   }
 }
 

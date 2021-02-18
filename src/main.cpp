@@ -33,26 +33,23 @@ int main() {
     player.SetPlayerGameTime(gametime);
     last = player.GetPlayerGameTime();
     duration = last - first;
-    cout << "\033[2J\033[1;1H";
-    cout << "Game has terminated successfully!\n";
-    cout << "Player: " << player.GetPlayerName() << "\n";
-    cout << "Score: " << game.GetScore() << "\n";
-    cout << "Duration: " << duration << " seconds\n";
-    cout << "Size: " << game.GetSize() << "\n";
+    // GameOver
+    cout << "Game Over \n";
+    cout << "Player Name: " << player.GetPlayerName() << "  " << "Score: " << game.GetScore() << "   " << "Duration: " << duration << " seconds\n";
     player.SetPlayerScore(game.GetScore());
     player.GetPlayerGameTime();
-    Scoreboard.SaveHistory(player, duration);
+    Scoreboard.SaveScore(player, duration);
   }
   else if(mode == gamemode.kHistory){
     
-    auto player_history = Scoreboard.ReadHistory();
+    auto player_history = Scoreboard.GetScoreFromFile();
     if(!(player_history.size() > 0))
     {
       cout << "No Previous Data Stored!\n";
     }
     else
     {
-    Scoreboard.DisplayOrderedHistory();
+    Scoreboard.DisplayScoreBoard();
     }
    
   }

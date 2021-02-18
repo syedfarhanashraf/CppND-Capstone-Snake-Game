@@ -38,7 +38,7 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food, SDL_Point const &power_slow) {
+void Renderer::Render(Snake const snake, SDL_Point const &food, SDL_Point const &power_slow,SDL_Point const &power_Fast) {
   SDL_Rect block;
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
@@ -58,17 +58,23 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, SDL_Point const 
   block.x = power_slow.x * block.w;
   block.y = power_slow.y * block.h;
   SDL_RenderFillRect(sdl_renderer, &block);
+  
+  // Render PowerFast
+  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
+  block.x = power_Fast.x * block.w;
+  block.y = power_Fast.y * block.h;
+  SDL_RenderFillRect(sdl_renderer, &block);
 
   // Render snake's body
  
    for( int i = 0; i < snake.body.size();i++){
        if(i % 2)
          {
-              SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+            SDL_SetRenderDrawColor(sdl_renderer, 0xb8, 0xb8, 0xb8, 0xFF);
          }
        else
          {
-            SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x7A, 0xFF, 0xFF);
+            SDL_SetRenderDrawColor(sdl_renderer, 0x9e, 0x9e, 0x9e, 0xFF);
          }
     block.x = snake.body[i].x * block.w;
     block.y = snake.body[i].y * block.h;
@@ -81,10 +87,11 @@ void Renderer::Render(Snake const snake, SDL_Point const &food, SDL_Point const 
   if (snake.alive) {
     SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
   } 
-  else {
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
+  else 
+  {
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
   }
-  SDL_RenderFillRect(sdl_renderer, &block);
+    SDL_RenderFillRect(sdl_renderer, &block);
 
   // Update Screen
   SDL_RenderPresent(sdl_renderer);

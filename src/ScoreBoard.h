@@ -13,13 +13,12 @@ public:
     //Default Constructor
     ScoreBoard();
     //Methods
-    void SaveHistory(Player &player, int duration);
-    vector<shared_ptr<Player>> ReadHistory();
-    vector<shared_ptr<Player>> SortHistory(vector<shared_ptr<Player>> &v);
-    void DisplayHistory();
-    void DisplayOrderedHistory();
-    Player GetHighScore();
-    void DisplayHighScore();
+    void SaveScore(Player &player, int duration);
+    vector<shared_ptr<Player>> GetScoreFromFile();
+    vector<shared_ptr<Player>> SortScoreBoard(vector<shared_ptr<Player>> &v);
+ 
+    void DisplayScoreBoard();
+   
 private:
     vector<shared_ptr<Player>> _history;
 };

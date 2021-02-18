@@ -4,29 +4,29 @@
 ScoreBoard::ScoreBoard(){};
 
 // Methods Definition
-void ScoreBoard::SaveHistory(Player &player, int duration){
+void ScoreBoard::SaveScore(Player &player, int duration){
     //Create Output file stream
-    fstream Game_History;
+    fstream Game_ScoreHistory;
     //format text file
-    Game_History.open("Game_History.txt", ios::binary | ios::out | ios::app);
+    Game_ScoreHistory.open("ScoreBoard.txt", ios::binary | ios::out | ios::app);
 
-    if(Game_History.is_open()){
-        Game_History << player.GetPlayerName() << " " << player.GetPlayerScore() << " " << duration << " seconds\n";
-        Game_History.close();
+    if(Game_ScoreHistory.is_open()){
+        Game_ScoreHistory << player.GetPlayerName() << " " << player.GetPlayerScore() << " " << duration << " seconds\n";
+        Game_ScoreHistory.close();
     }
     else{
         cout << "ERROR: Requested file cannot be opened\n";
     }
 }
 
-vector<shared_ptr<Player>> ScoreBoard::ReadHistory(){
+vector<shared_ptr<Player>> ScoreBoard::GetScoreFromFile(){
   
     string line, name;
     int score, game_time;
-    ifstream Game_History("Game_History.txt");
+    ifstream Game_ScoreHistory("ScoreBoard.txt");
 
-    if(Game_History.is_open()){
-        while(getline(Game_History, line))
+    if(Game_ScoreHistory.is_open()){
+        while(getline(Game_ScoreHistory, line))
         {
             istringstream linestream(line);
             if(linestream >> name >> score >> game_time){
@@ -34,12 +34,12 @@ vector<shared_ptr<Player>> ScoreBoard::ReadHistory(){
                 _history.emplace_back(move(shared_player));
             }
         }
-        Game_History.close();
+        Game_ScoreHistory.close();
         return _history;
     }
 }
 
-vector<shared_ptr<Player>> ScoreBoard::SortHistory(vector<shared_ptr<Player>> &v){
+vector<shared_ptr<Player>> ScoreBoard::SortScoreBoard(vector<shared_ptr<Player>> &v){
     sort(v.begin(), v.end(), [] 
     (const shared_ptr<Player>& player_a, shared_ptr<Player>& player_b){
         return player_a->GetPlayerScore() > player_b->GetPlayerScore();
@@ -47,52 +47,22 @@ vector<shared_ptr<Player>> ScoreBoard::SortHistory(vector<shared_ptr<Player>> &v
     return v;
 }
 
-void ScoreBoard::DisplayOrderedHistory(){
+void ScoreBoard::DisplayScoreBoard(){
 auto ordered_history = _history;
-ordered_history = this->SortHistory(ordered_history);
+ordered_history = this->SortScoreBoard(ordered_history);
     if(ordered_history.size() > 0){
-        cout << "\033[2J\033[1;1H";
-        cout << "/------------------ Hall of Fame -------------------/" << endl;
+       
+        cout << "/------------------ ScoreBoard By Rank -------------------/" << endl;
         int count = 1;
         for(auto i : ordered_history){
-            cout << count << ". " << i->GetPlayerName() << ", Score: " << i->GetPlayerScore() << ", Duration: " << i->GetPlayerGameTime() << " seconds\n";
+            cout <<  "Rank "<<count <<"      Name: " << i->GetPlayerName() << "      Score: " << i->GetPlayerScore() << "      Duration: " << i->GetPlayerGameTime() << "sec\n";
             count++;
-            if(count > 5){
+            if(count > 9){
                 break;
             }
         }
     }
     else{
-        cout << "ERROR: No data to display\n";
+        cout << "ERROR: No ScoreBoard Yet!!!!!\n";
     }
-}
-
-void ScoreBoard::DisplayHistory(){
-    if(_history.size() > 0){
-        cout << "\033[2J\033[1;1H";
-        cout << "/------------------ Game History -------------------/" << endl;
-        int count = 1;
-        for(auto i : _history){
-            cout << count << ". " << i->GetPlayerName() << ", Score: " << i->GetPlayerScore() << ", Duration: " << i->GetPlayerGameTime() << endl;
-            count++;
-        }
-    }
-    else{
-        cout << "ERROR: No data to display\n";
-    }
-}
-
-Player ScoreBoard::GetHighScore(){
-    auto history = _history;
-    history = this->SortHistory(history);
-    auto tmp = history.front();
-    auto high_score = (*tmp.get());
-    return high_score;
-}
-
-void ScoreBoard::DisplayHighScore(){
-    auto high_score = this->GetHighScore();
-    cout << "\033[2J\033[1;1H";
-    cout << "/------------------ Highest Score Player -------------------/" << endl;
-    cout << high_score.GetPlayerName() << ", Score: " << high_score.GetPlayerScore() << ", Duration: " << high_score.GetPlayerGameTime() << " seconds\n";
 }
